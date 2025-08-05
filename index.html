@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="./images/favicon-32x32.png"
+    />
+    <title>Frontend Mentor | Advice generator app</title>
+    <link rel="stylesheet" href="style.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;800&display=swap"
+      rel="stylesheet"
+    />
+    <script>
+      window.onload = function () {
+        async function fetchData() {
+          try {
+            document.querySelector(".adviceLoading").style.display = "block";
+            const res = await fetch(
+              "https://api.adviceslip.com/advice?timestamp=" +
+                new Date().getTime()
+            );
+            const data = await res.json();
+            document.querySelector(".adviceDesc").innerHTML = data.slip.advice;
+            document.querySelector(".adviceTitle").innerHTML =
+              "ADVICE #" + data.slip.id;
+          } catch (error) {
+            console.log(error);
+          } finally {
+            document.querySelector(".adviceLoading").style.display = "none";
+          }
+        }
+
+        function Refetch() {
+          document.querySelector(".adviceDesc").innerHTML = "";
+          document.querySelector(".adviceTitle").innerHTML = "ADVICE #";
+          fetchData();
+        }
+
+        fetchData();
+
+        document.querySelector(".dice").addEventListener("click", Refetch);
+      };
+    </script>
+  </head>
+  <body class="manrope">
+    <div class="container">
+      <p class="adviceTitle">ADVICE #</p>
+      <div class="adviceLoading" style="display: none">Loading ....</div>
+      <div class="adviceDesc"></div>
+      <div class="adviceFooter"></div>
+      <div class="diceButton">
+        <img
+          src="images/icon-dice.svg"
+          alt="Dice"
+          class="dice"
+          onclick="Refetch()"
+        />
+      </div>
+    </div>
+  </body>
+</html>
